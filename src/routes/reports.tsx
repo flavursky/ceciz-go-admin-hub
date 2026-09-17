@@ -1,3 +1,3 @@
 import { createFileRoute } from "@tanstack/react-router"; import { ReportsPage } from "@/components/admin/pages";
-export const Route = createFileRoute("/reports")({ validateSearch:(s:Record<string,unknown>)=>({tab:typeof s.tab==="string"?s.tab:undefined}), head:()=>({meta:meta("Financial Reports","Review CECIZ GO profit, admin compensation, and payment summaries.")}), component:ReportsPage });
+export const Route = createFileRoute("/reports")({ validateSearch:(s:Record<string,unknown>)=>({tab:typeof s["tab"]==="string"?s["tab"]:undefined}), head:()=>({meta:meta("Financial Reports","Review CECIZ GO profit, admin compensation, and payment summaries.")}), component:ReportsPage });
 function meta(t:string,d:string){return [{title:`${t} — CECIZ GO Admin`},{name:"description",content:d},{property:"og:title",content:`${t} — CECIZ GO Admin`},{property:"og:description",content:d},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}
