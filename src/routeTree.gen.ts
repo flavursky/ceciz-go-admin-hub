@@ -10,33 +10,154 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlbumOrdersRouteImport } from './routes/album-orders'
+import { Route as BatchesRouteImport } from './routes/batches'
+import { Route as CashflowRouteImport } from './routes/cashflow'
+import { Route as PaymentsRouteImport } from './routes/payments'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as RolesRouteImport } from './routes/roles'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TaxRouteImport } from './routes/tax'
+import { Route as TrackingRouteImport } from './routes/tracking'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlbumOrdersRoute = AlbumOrdersRouteImport.update({
+  id: '/album-orders',
+  path: '/album-orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BatchesRoute = BatchesRouteImport.update({
+  id: '/batches',
+  path: '/batches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CashflowRoute = CashflowRouteImport.update({
+  id: '/cashflow',
+  path: '/cashflow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentsRoute = PaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RolesRoute = RolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TaxRoute = TaxRouteImport.update({
+  id: '/tax',
+  path: '/tax',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrackingRoute = TrackingRouteImport.update({
+  id: '/tracking',
+  path: '/tracking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/album-orders': typeof AlbumOrdersRoute
+  '/batches': typeof BatchesRoute
+  '/cashflow': typeof CashflowRoute
+  '/payments': typeof PaymentsRoute
+  '/reports': typeof ReportsRoute
+  '/roles': typeof RolesRoute
+  '/settings': typeof SettingsRoute
+  '/tax': typeof TaxRoute
+  '/tracking': typeof TrackingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/album-orders': typeof AlbumOrdersRoute
+  '/batches': typeof BatchesRoute
+  '/cashflow': typeof CashflowRoute
+  '/payments': typeof PaymentsRoute
+  '/reports': typeof ReportsRoute
+  '/roles': typeof RolesRoute
+  '/settings': typeof SettingsRoute
+  '/tax': typeof TaxRoute
+  '/tracking': typeof TrackingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/album-orders': typeof AlbumOrdersRoute
+  '/batches': typeof BatchesRoute
+  '/cashflow': typeof CashflowRoute
+  '/payments': typeof PaymentsRoute
+  '/reports': typeof ReportsRoute
+  '/roles': typeof RolesRoute
+  '/settings': typeof SettingsRoute
+  '/tax': typeof TaxRoute
+  '/tracking': typeof TrackingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/album-orders'
+    | '/batches'
+    | '/cashflow'
+    | '/payments'
+    | '/reports'
+    | '/roles'
+    | '/settings'
+    | '/tax'
+    | '/tracking'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/album-orders'
+    | '/batches'
+    | '/cashflow'
+    | '/payments'
+    | '/reports'
+    | '/roles'
+    | '/settings'
+    | '/tax'
+    | '/tracking'
+  id:
+    | '__root__'
+    | '/'
+    | '/album-orders'
+    | '/batches'
+    | '/cashflow'
+    | '/payments'
+    | '/reports'
+    | '/roles'
+    | '/settings'
+    | '/tax'
+    | '/tracking'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlbumOrdersRoute: typeof AlbumOrdersRoute
+  BatchesRoute: typeof BatchesRoute
+  CashflowRoute: typeof CashflowRoute
+  PaymentsRoute: typeof PaymentsRoute
+  ReportsRoute: typeof ReportsRoute
+  RolesRoute: typeof RolesRoute
+  SettingsRoute: typeof SettingsRoute
+  TaxRoute: typeof TaxRoute
+  TrackingRoute: typeof TrackingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +169,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/album-orders': {
+      id: '/album-orders'
+      path: '/album-orders'
+      fullPath: '/album-orders'
+      preLoaderRoute: typeof AlbumOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/batches': {
+      id: '/batches'
+      path: '/batches'
+      fullPath: '/batches'
+      preLoaderRoute: typeof BatchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cashflow': {
+      id: '/cashflow'
+      path: '/cashflow'
+      fullPath: '/cashflow'
+      preLoaderRoute: typeof CashflowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payments': {
+      id: '/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof PaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/roles': {
+      id: '/roles'
+      path: '/roles'
+      fullPath: '/roles'
+      preLoaderRoute: typeof RolesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tax': {
+      id: '/tax'
+      path: '/tax'
+      fullPath: '/tax'
+      preLoaderRoute: typeof TaxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tracking': {
+      id: '/tracking'
+      path: '/tracking'
+      fullPath: '/tracking'
+      preLoaderRoute: typeof TrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlbumOrdersRoute: AlbumOrdersRoute,
+  BatchesRoute: BatchesRoute,
+  CashflowRoute: CashflowRoute,
+  PaymentsRoute: PaymentsRoute,
+  ReportsRoute: ReportsRoute,
+  RolesRoute: RolesRoute,
+  SettingsRoute: SettingsRoute,
+  TaxRoute: TaxRoute,
+  TrackingRoute: TrackingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
