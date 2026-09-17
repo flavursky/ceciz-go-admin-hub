@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router"; import { AlbumOrdersPage } from "@/components/admin/pages";
+export const Route = createFileRoute("/album-orders")({ head:()=>({meta:meta("PO Album / CO Web","Track CECIZ GO album orders and web checkout progress.")}), component:AlbumOrdersPage });
+function meta(t:string,d:string){return [{title:`${t} — CECIZ GO Admin`},{name:"description",content:d},{property:"og:title",content:`${t} — CECIZ GO Admin`},{property:"og:description",content:d},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}

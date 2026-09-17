@@ -1,0 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { BatchesPage } from "@/components/admin/pages";
+export const Route = createFileRoute("/batches")({ head: () => ({ meta: meta("Batch & Harga", "Manage CECIZ GO batches and country-specific price preparation.") }), component: BatchesPage });
+function meta(title:string, description:string){return [{title:`${title} — CECIZ GO Admin`},{name:"description",content:description},{property:"og:title",content:`${title} — CECIZ GO Admin`},{property:"og:description",content:description},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}

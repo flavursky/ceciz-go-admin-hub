@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router"; import { TaxPage } from "@/components/admin/pages";
+export const Route = createFileRoute("/tax")({ head:()=>({meta:meta("Tax Management","Review CECIZ GO periodic tax invoices and payment status.")}), component:TaxPage });
+function meta(t:string,d:string){return [{title:`${t} — CECIZ GO Admin`},{name:"description",content:d},{property:"og:title",content:`${t} — CECIZ GO Admin`},{property:"og:description",content:d},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}

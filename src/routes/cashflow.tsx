@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router"; import { CashflowPage } from "@/components/admin/pages";
+export const Route = createFileRoute("/cashflow")({ head:()=>({meta:meta("Cashflow","Monitor CECIZ GO internal income, expenses, and balances.")}), component:CashflowPage });
+function meta(t:string,d:string){return [{title:`${t} — CECIZ GO Admin`},{name:"description",content:d},{property:"og:title",content:`${t} — CECIZ GO Admin`},{property:"og:description",content:d},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}
