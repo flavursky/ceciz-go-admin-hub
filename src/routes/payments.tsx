@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router"; import { PaymentsPage } from "@/components/admin/pages";
+export const Route = createFileRoute("/payments")({ head:()=>({meta:meta("Payment Verification","Review CECIZ GO buyer payment proofs and verification status.")}), component:PaymentsPage });
+function meta(t:string,d:string){return [{title:`${t} — CECIZ GO Admin`},{name:"description",content:d},{property:"og:title",content:`${t} — CECIZ GO Admin`},{property:"og:description",content:d},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}

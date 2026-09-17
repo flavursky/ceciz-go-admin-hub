@@ -11,7 +11,8 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { cn } from "@/lib/utils";
 
 type Role = "Owner" | "Staff";
-type NavItem = { label: string; to: string; icon: typeof LayoutDashboard; ownerOnly?: boolean };
+type NavTo = "/" | "/batches" | "/payments" | "/tracking" | "/tax" | "/album-orders" | "/cashflow" | "/reports" | "/settings" | "/roles";
+type NavItem = { label: string; to: NavTo; icon: typeof LayoutDashboard; ownerOnly?: boolean };
 
 const navSections: { label: string; items: NavItem[] }[] = [
   { label: "Overview", items: [{ label: "Dashboard", to: "/", icon: LayoutDashboard }] },
@@ -25,8 +26,8 @@ const navSections: { label: string; items: NavItem[] }[] = [
   ]},
   { label: "Reports", items: [
     { label: "Laba GO", to: "/reports", icon: BarChart3, ownerOnly: true },
-    { label: "Gaji Admin", to: "/reports?tab=salary", icon: BadgeDollarSign, ownerOnly: true },
-    { label: "Rekap Pembayaran", to: "/reports?tab=payments", icon: FileBarChart, ownerOnly: true },
+    { label: "Gaji Admin", to: "/reports", icon: BadgeDollarSign, ownerOnly: true },
+    { label: "Rekap Pembayaran", to: "/reports", icon: FileBarChart, ownerOnly: true },
   ]},
   { label: "System", items: [
     { label: "Settings", to: "/settings", icon: Settings, ownerOnly: true },
@@ -62,9 +63,8 @@ function NavLinks({ collapsed = false, onNavigate }: { collapsed?: boolean; onNa
       {!collapsed && <p className="mb-2 px-3 text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70">{section.label}</p>}
       <div className="space-y-1">{items.map((item) => {
         const Icon = item.icon;
-        const cleanTo = item.to.split("?")[0];
-        const active = cleanTo === "/" ? pathname === "/" : pathname.startsWith(cleanTo);
-        return <Link key={item.label} to={cleanTo} search={item.to.includes("?") ? { tab: item.to.split("=")[1] } : undefined} onClick={onNavigate} title={collapsed ? item.label : undefined} className={cn("flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors", active ? "bg-primary-soft text-primary-strong" : "text-sidebar-foreground hover:bg-accent", collapsed && "justify-center px-0")}>
+        const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+        return <Link key={item.label} to={item.to} onClick={onNavigate} title={collapsed ? item.label : undefined} className={cn("flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors", active ? "bg-primary-soft text-primary-strong" : "text-sidebar-foreground hover:bg-accent", collapsed && "justify-center px-0")}>
           <Icon className="h-[18px] w-[18px] shrink-0" />{!collapsed && <span className="truncate">{item.label}</span>}
         </Link>;
       })}</div>
