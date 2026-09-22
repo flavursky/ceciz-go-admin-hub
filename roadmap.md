@@ -1,8 +1,6 @@
-# CECIZ GO Admin Prototype
+# CECIZ GO Admin Prototype — Revisi
 
-- [x] Build shared admin shell and responsive navigation
-- [x] Build dashboard, charts, and activity views
-- [x] Build operations modules and workflows
-- [x] Build financial reports and settings
-- [x] Build roles and permissions prototype
-- [x] Validate desktop and mobile layouts
+- [ ] Perbarui alur input dan hasil Batch & Harga
+- [ ] Perbarui field edit Tracking
+- [ ] Tambahkan alur add/edit/detail Tagihan Tax multi-batch
+- [ ] Validasi desktop dan mobile
