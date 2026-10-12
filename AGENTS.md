@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep manual operations and period fee forms in focused admin modules using session-only React state; this preserves the mock-only prototype boundary.
+- Keep period eligibility and fee aggregation in a browser-safe rule module with tests; this makes report inclusion and editable totals verifiable.

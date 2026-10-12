@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { CountryBadge, MetricCard, Panel, PanelHead, StatusBadge } from "./admin-ui";
+import { PeriodFeesPanel } from "./period-fees";
+import { eligibleProfitBatch } from "./period-rules";
+import { CountryBadge, MetricCard, MobileCards, TableShell, Panel, PanelHead, StatusBadge } from "./admin-ui";
 
 export const rp = (n: number) => `Rp ${Math.round(n).toLocaleString("id-ID")}`;
 const num = (v: string) => Number(v) || 0;
@@ -90,13 +92,15 @@ export function AlbumInputPanel({ onClose }: { onClose: () => void }) {
 
 /* ---------- Laba GO per periode ---------- */
 const doneBatches = [
-  { batch: "CH-022", country: "CH", status: "Done", laba: 185400 },
-  { batch: "KR-017", country: "KR", status: "Done", laba: 142832 },
-  { batch: "JP-012", country: "JP", status: "Done", laba: 99000 },
-  { batch: "TH-009", country: "TH", status: "Done", laba: 76500 },
-  { batch: "CH-025", country: "CH", status: "Open", laba: 0 },
+  { batch: "CH-022", country: "CH", status: "Done", calculated: true, laba: 185400 },
+  { batch: "KR-017", country: "KR", status: "Done", calculated: true, laba: 142832 },
+  { batch: "JP-012", country: "JP", status: "Done", calculated: true, laba: 99000 },
+  { batch: "TH-009", country: "TH", status: "Done", calculated: true, laba: 76500 },
+  { batch: "CH-025", country: "CH", status: "Open", calculated: false, laba: 0 },
 ];
 export function LabaGoPanel() {
+  const [history, setHistory] = useState([{ id: 1, name: "Agustus 2026", from: "2026-08-01", to: "2026-08-31", batches: "CH-022, KR-017", income: 328232, costs: 100000, net: 228232, notes: "Periode contoh sebelumnya" }]);
+  const [notes, setNotes] = useState("");
   const [name, setName] = useState("TAX 1-3");
   const [from, setFrom] = useState("2026-09-01");
   const [to, setTo] = useState("2026-09-30");
@@ -108,7 +112,7 @@ export function LabaGoPanel() {
   const [pctB, setPctB] = useState("20");
   const [tabungan, setTabungan] = useState("0");
   const modal = num(packing) + num(lain);
-  const pemasukan = doneBatches.filter(b => sel.includes(b.batch)).reduce((s, b) => s + b.laba, 0);
+  const pemasukan = doneBatches.filter(b => eligibleProfitBatch(b) && sel.includes(b.batch)).reduce((s, b) => s + b.laba, 0);
   const bersih = pemasukan - modal;
   const rows: [string, string, string][] = [
     ["Total beli bahan packing", rp(num(packing)), "modal packing"],
@@ -121,6 +125,7 @@ export function LabaGoPanel() {
     ["Tabungan GO", rp(pemasukan * num(tabungan) / 100), `${tabungan}%`],
   ];
   return (
+    <>
     <div className="mt-5 grid gap-5 xl:grid-cols-[1.1fr_1fr]">
       <Panel>
         <PanelHead title="Input Laba per Periode" subtitle="Pilih batch berstatus Done yang laba bersihnya sudah terhitung" />
@@ -131,7 +136,7 @@ export function LabaGoPanel() {
         </div>
         <div className="grid gap-2 border-t p-4">
           <p className="text-xs font-bold uppercase text-muted-foreground">Batch</p>
-          {doneBatches.map(b => { const ok = b.status === "Done"; return (
+          {doneBatches.map(b => { const ok = eligibleProfitBatch(b); return (
             <label key={b.batch} className={`flex items-center gap-3 rounded-lg border p-2.5 ${ok ? "cursor-pointer" : "opacity-50"}`}>
               <Checkbox disabled={!ok} checked={sel.includes(b.batch)} onCheckedChange={c => setSel(s => c ? [...s, b.batch] : s.filter(x => x !== b.batch))} />
               <strong className="text-sm">{b.batch}</strong><CountryBadge country={b.country} /><StatusBadge status={b.status} />
@@ -144,59 +149,18 @@ export function LabaGoPanel() {
           <label className="grid gap-1.5 sm:col-span-2"><span className="text-xs font-semibold">Keterangan pengeluaran lain</span><Input value={lainNote} onChange={e => setLainNote(e.target.value)} /></label>
           <label className="grid gap-1.5"><span className="text-xs font-semibold">Pembagian Gaji Admin A (%)</span><Input type="number" value={pctA} onChange={e => setPctA(e.target.value)} /></label>
           <label className="grid gap-1.5"><span className="text-xs font-semibold">Pembagian Gaji Admin B (%)</span><Input type="number" value={pctB} onChange={e => setPctB(e.target.value)} /></label>
+          <label className="grid gap-1.5 sm:col-span-2"><span className="text-xs font-semibold">Keterangan Periode</span><Input value={notes} onChange={e => setNotes(e.target.value)} /></label>
           <label className="grid gap-1.5"><span className="text-xs font-semibold">Sisihan Tabungan GO (%)</span><Input type="number" value={tabungan} onChange={e => setTabungan(e.target.value)} /></label>
         </div>
       </Panel>
       <Panel>
-        <PanelHead title={name || "Periode"} subtitle={`${from} s/d ${to}`} action={<Button size="sm"><Save /> Simpan periode</Button>} />
+        <PanelHead title={name || "Periode"} subtitle={`${from} s/d ${to}`} action={<Button size="sm" disabled={!name.trim() || !from || !to || !sel.length || from > to} onClick={() => setHistory(h => [{ id: Date.now(), name, from, to, batches: sel.join(", "), income: pemasukan, costs: modal, net: bersih, notes }, ...h])}><Save /> Simpan periode</Button>} />
         <div className="divide-y">{rows.map(([k, v, n]) => <div key={k} className="grid grid-cols-[1.2fr_1fr] gap-2 px-5 py-3 text-sm sm:grid-cols-[1.3fr_1fr_1fr]"><span className="font-semibold">{k}</span><strong className="text-right sm:text-left">{v}</strong><span className="col-span-2 text-xs text-muted-foreground sm:col-span-1">{n}</span></div>)}</div>
       </Panel>
     </div>
-  );
-}
-
-/* ---------- Gaji Admin editable per batch ---------- */
-type FeeRow = { admin: string; batch: string; country: string; nyelem: number; rekap: number; edited?: boolean };
-const initialFees: FeeRow[] = [
-  { admin: "Ira", batch: "KR-017", country: "KR", nyelem: 5000, rekap: 15000 },
-  { admin: "Ira", batch: "CH-022", country: "CH", nyelem: 10000, rekap: 15000 },
-  { admin: "Nadia", batch: "JP-012", country: "JP", nyelem: 12000, rekap: 15000 },
-  { admin: "Nadia", batch: "CH-025", country: "CH", nyelem: 10000, rekap: 20000 },
-  { admin: "Salsa", batch: "TH-009", country: "TH", nyelem: 8000, rekap: 15000 },
-];
-export function GajiAdminPanel() {
-  const [fees, setFees] = useState(initialFees);
-  const [filter, setFilter] = useState("Semua");
-  const [edit, setEdit] = useState<number | null>(null);
-  const [draft, setDraft] = useState({ nyelem: "", rekap: "" });
-  const admins = Array.from(new Set(fees.map(f => f.admin)));
-  const shown = fees.map((f, i) => ({ ...f, i })).filter(f => filter === "Semua" || f.admin === filter);
-  const open = (i: number) => { const f = fees[i]!; setDraft({ nyelem: String(f.nyelem), rekap: String(f.rekap) }); setEdit(i); };
-  return (
-    <>
-      <div className="mb-5 grid gap-3 sm:grid-cols-3">{admins.map(a => { const t = fees.filter(f => f.admin === a); return <MetricCard key={a} label={`Gaji ${a}`} value={rp(t.reduce((s, f) => s + f.nyelem + f.rekap, 0))} detail={`${t.length} batch · nyelem + rekap`} icon={Calculator} />; })}</div>
-      <Panel>
-        <PanelHead title="Fee Admin per Batch" subtitle="Fee diambil dari tiap batch; bisa diedit manual" action={<select aria-label="Filter admin" className="h-9 rounded-md border bg-background px-3 text-sm" value={filter} onChange={e => setFilter(e.target.value)}><option>Semua</option>{admins.map(a => <option key={a}>{a}</option>)}</select>} />
-        <div className="divide-y">{shown.map(f => (
-          <div key={f.i} className="grid grid-cols-2 items-center gap-2 px-5 py-3 text-sm sm:grid-cols-[1fr_1fr_.7fr_1fr_1fr_1fr_auto]">
-            <strong>{f.admin}</strong><span>{f.batch}</span><CountryBadge country={f.country} />
-            <span><span className="text-xs text-muted-foreground sm:hidden">Nyelem </span>{rp(f.nyelem)}</span>
-            <span><span className="text-xs text-muted-foreground sm:hidden">Rekap </span>{rp(f.rekap)}</span>
-            <span className="font-bold">{rp(f.nyelem + f.rekap)}{f.edited && <span className="ml-2 rounded bg-warning-soft px-1.5 py-0.5 text-[10px] font-semibold">diedit</span>}</span>
-            <Button size="sm" variant="outline" onClick={() => open(f.i)}><Pencil /> Edit</Button>
-          </div>))}
-        </div>
-      </Panel>
-      <Dialog open={edit !== null} onOpenChange={o => { if (!o) setEdit(null); }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader><DialogTitle>Edit fee admin</DialogTitle><DialogDescription>{edit !== null && `${fees[edit]!.admin} · ${fees[edit]!.batch}`}</DialogDescription></DialogHeader>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="grid gap-1.5"><span className="text-xs font-semibold">Fee Nyelem (Rp)</span><Input type="number" value={draft.nyelem} onChange={e => setDraft(d => ({ ...d, nyelem: e.target.value }))} /></label>
-            <label className="grid gap-1.5"><span className="text-xs font-semibold">Fee Rekap (Rp)</span><Input type="number" value={draft.rekap} onChange={e => setDraft(d => ({ ...d, rekap: e.target.value }))} /></label>
-          </div>
-          <DialogFooter><Button variant="outline" onClick={() => setEdit(null)}>Batal</Button><Button onClick={() => { setFees(fs => fs.map((f, i) => i === edit ? { ...f, nyelem: num(draft.nyelem), rekap: num(draft.rekap), edited: true } : f)); setEdit(null); }}><Save /> Simpan</Button></DialogFooter>
-        </DialogContent>
-      </Dialog>
+    <div className="mt-5"><h2 className="mb-3 font-bold">Riwayat Laba per Periode</h2><TableShell columns={["Periode", "Tanggal", "Batch", "Pemasukan", "Modal", "Laba Bersih", "Keterangan"]} rows={history.map(h => [<strong>{h.name}</strong>, `${h.from} s/d ${h.to}`, h.batches, rp(h.income), rp(h.costs), <strong>{rp(h.net)}</strong>, h.notes || "—"])}/><MobileCards items={history.map(h => ({ title: h.name, subtitle: `${h.from} s/d ${h.to}`, rows: [{ label: "Batch", value: h.batches }, { label: "Pemasukan", value: rp(h.income) }, { label: "Modal", value: rp(h.costs) }, { label: "Laba Bersih", value: rp(h.net) }, { label: "Keterangan", value: h.notes || "—" }] }))}/></div>
     </>
   );
 }
+
+export const GajiAdminPanel = PeriodFeesPanel;
