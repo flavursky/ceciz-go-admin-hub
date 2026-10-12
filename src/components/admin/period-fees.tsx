@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { CountryBadge, MetricCard, MobileCards, Panel, PanelHead, TableShell } from "./admin-ui";
-import { EntryInput, EntrySelect } from "./manual-operations";
+import { EntryInput } from "./manual-operations";
+import { summarizeFees } from "./period-rules";
 
 type Fee = { batch: string; country: string; nyelem: string; rekap: string; notes: string };
 type FeePeriod = { id: number; period: string; admin: string; from: string; to: string; notes: string; fees: Fee[] };
@@ -23,7 +24,7 @@ export function PeriodFeesPanel() {
   const [filter, setFilter] = useState("Semua");
   const [search, setSearch] = useState("");
   const shown = periods.filter(p => (filter === "Semua" || p.period === filter) && `${p.admin} ${p.notes}`.toLowerCase().includes(search.toLowerCase()));
-  const total = (p: FeePeriod) => sumFee(p.fees, "nyelem") + sumFee(p.fees, "rekap");
+  const total = (p: FeePeriod) => summarizeFees(p.fees);
   const actions = (p: FeePeriod) => <div className="flex gap-1"><Button size="sm" variant="outline" onClick={() => setDetail(p)}><Eye/> Detail</Button><Button size="icon" variant="ghost" aria-label={`Edit fee ${p.admin} ${p.period}`} onClick={() => setDraft({ ...p, fees: p.fees.map(f => ({ ...f })) })}><Pencil/></Button></div>;
   const updateFee = (i: number, key: keyof Fee, value: string) => setDraft(d => d ? { ...d, fees: d.fees.map((f, j) => j === i ? { ...f, [key]: value } : f) } : d);
   return <><div className="mb-5 grid gap-3 sm:grid-cols-3"><MetricCard label="Total fee periode terpilih" value={rupiah(shown.reduce((s, p) => s + total(p), 0))} icon={Calculator}/><MetricCard label="Periode admin" value={String(shown.length)} icon={Calculator} tone="cream"/><MetricCard label="Batch dalam periode" value={String(shown.reduce((s, p) => s + p.fees.length, 0))} icon={Calculator} tone="green"/></div>
