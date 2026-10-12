@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { Notifications } from "./notifications";
 
 type Role = "Owner" | "Staff";
 type NavTo = "/" | "/batches" | "/payments" | "/tracking" | "/tax" | "/album-orders" | "/cashflow" | "/reports" | "/settings" | "/roles";
@@ -99,7 +100,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-30 grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center border-b bg-background/90 px-4 backdrop-blur md:px-7">
         <div className="flex min-w-0 items-center gap-3 lg:hidden"><Mark small /><div className="min-w-0"><p className="truncate text-sm font-extrabold">CECIZ GO</p><p className="text-[11px] text-muted-foreground">Admin workspace</p></div></div>
         <div className="hidden max-w-md lg:block"><div className="relative"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"/><Input className="bg-muted/55 pl-9 shadow-none" placeholder="Search batch, buyer, resi..." /></div></div>
-        <div className="flex items-center gap-2"><Button variant="ghost" size="icon" aria-label="Notifications" className="relative"><Bell/><span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive"/></Button><div className="hidden h-8 w-px bg-border sm:block"/><div className="hidden items-center gap-2 sm:flex"><div className="grid h-9 w-9 place-items-center rounded-full bg-secondary font-bold text-secondary-foreground">NA</div><div><p className="text-xs font-semibold">Nadia A.</p><p className="text-[11px] text-muted-foreground">{role}</p></div></div></div>
+        <div className="flex items-center gap-2"><Notifications/><div className="hidden h-8 w-px bg-border sm:block"/><div className="hidden items-center gap-2 sm:flex"><div className="grid h-9 w-9 place-items-center rounded-full bg-secondary font-bold text-secondary-foreground">NA</div><div><p className="text-xs font-semibold">Nadia A.</p><p className="text-[11px] text-muted-foreground">{role}</p></div></div></div>
       </header>
       <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-[1560px] px-4 pb-24 pt-6 md:px-7 lg:pb-8">{children}</main>
     </div><MobileNav />
