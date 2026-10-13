@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import logoAsset from "@/assets/logoceciz.png.asset.json";
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import {
   Archive, BadgeDollarSign, BarChart3, Bell, Boxes, Calculator, ChevronLeft, ChevronRight,
