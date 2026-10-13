@@ -6,8 +6,8 @@
 - [x] Validasi desktop dan mobile
 
 ## Revisi Oktober
-- [ ] Sesuaikan shipping, rekap fee, fee GO/warehouse, rate dan input JP
-- [ ] Tambahkan input manual tracking dan pembayaran
-- [ ] Tambahkan riwayat laba dan fee admin per periode
-- [ ] Aktifkan notifikasi prototype
-- [ ] Verifikasi seluruh alur revisi
+- [x] Sesuaikan shipping, rekap fee, fee GO/warehouse, rate dan input JP
+- [x] Tambahkan input manual tracking dan pembayaran
+- [x] Tambahkan riwayat laba dan fee admin per periode
+- [x] Aktifkan notifikasi prototype
+- [x] Verifikasi seluruh alur revisi
