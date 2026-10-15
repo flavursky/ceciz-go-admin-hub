@@ -24,6 +24,18 @@ export function jpNetRupiah(totalYen: number, rateYen: number) {
 export function sellingDifference(totalJual: number, totalTf: number) {
   return (Number(totalJual) || 0) - (Number(totalTf) || 0);
 }
+/** Selisih tax = tagihan PC − (tagihan freebies + harga CO Shopee + harga tagihan WH). */
+export function taxDifference(pc: number, freebies: number, shopee: number, wh: number) {
+  return (Number(pc) || 0) - ((Number(freebies) || 0) + (Number(shopee) || 0) + (Number(wh) || 0));
+}
+/** Laba kotor = selisih tax + selisih harga. */
+export function grossProfit(selisihTax: number, selisihHarga: number) {
+  return (Number(selisihTax) || 0) + (Number(selisihHarga) || 0);
+}
+/** Laba bersih = laba kotor − fee nyelem − fee rekap. */
+export function netProfit(labaKotor: number, nyelem: number, rekap: number) {
+  return (Number(labaKotor) || 0) - (Number(nyelem) || 0) - (Number(rekap) || 0);
+}
 
 export const batchRecords: BatchRecord[] = [
   { batch: "CH-022", country: "CH", tracking: "Done", bill: true, status: "Closed", calculated: true, laba: 185400, admin: "Ira", nyelem: 10000, rekap: 15000 },

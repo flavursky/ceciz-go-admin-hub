@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PeriodFeesPanel } from "./period-fees";
-import { batchRecords, eligibleProfitBatch, sellingDifference } from "./period-rules";
+import { batchRecords, eligibleProfitBatch, grossProfit, netProfit, sellingDifference, taxDifference } from "./period-rules";
 import { CountryBadge, MobileCards, TableShell, Panel, PanelHead, StatusBadge } from "./admin-ui";
 
 export const rp = (n: number) => `Rp ${Math.round(n).toLocaleString("id-ID")}`;
@@ -33,20 +33,37 @@ export function BatchActions({ status, onEdit, onStatus, onCalc }: { status: str
   );
 }
 
-const internalFields = ["Total Harga Jual", "Harga TF Seller", "Tagihan PC", "Tagihan freebies", "Harga CO Shopee", "Harga tagihan WH", "Pemasukan tax", "Selisih tax", "Laba kotor", "Laba bersih"];
+const inputFields = ["Total Harga Jual", "Harga TF Seller", "Tagihan PC", "Tagihan freebies", "Harga CO Shopee", "Harga tagihan WH", "Pemasukan tax", "Fee Nyelem", "Fee Rekap"];
+const autoNotes: Record<string, string> = { "Selisih harga": "Harga Jual − TF Seller", "Selisih tax": "Tagihan PC − (Freebies + CO Shopee + Tagihan WH)", "Laba kotor": "Selisih tax + Selisih harga", "Laba bersih": "Laba kotor − Fee Nyelem − Fee Rekap" };
 export function InternalCalcDialog({ batch, arrived, onClose, onSave }: { batch: string | null; arrived: boolean; onClose: () => void; onSave: (laba: number) => void }) {
   const [vals, setVals] = useState<Record<string, string>>({});
-  const selisih = sellingDifference(num(vals["Total Harga Jual"] ?? ""), num(vals["Harga TF Seller"] ?? ""));
+  const [over, setOver] = useState<Record<string, string>>({});
+  const rec = batchRecords.find(b => b.batch === batch);
+  const v = (k: string) => num(vals[k] ?? (k === "Fee Nyelem" ? String(rec?.nyelem ?? "") : k === "Fee Rekap" ? String(rec?.rekap ?? "") : ""));
+  const eff = (k: string, auto: number) => over[k] !== undefined && over[k] !== "" ? num(over[k]) : auto;
+  const selHarga = eff("Selisih harga", sellingDifference(v("Total Harga Jual"), v("Harga TF Seller")));
+  const selTax = eff("Selisih tax", taxDifference(v("Tagihan PC"), v("Tagihan freebies"), v("Harga CO Shopee"), v("Harga tagihan WH")));
+  const kotor = eff("Laba kotor", grossProfit(selTax, selHarga));
+  const bersih = eff("Laba bersih", netProfit(kotor, v("Fee Nyelem"), v("Fee Rekap")));
+  const autoVals: Record<string, number> = { "Selisih harga": selHarga, "Selisih tax": selTax, "Laba kotor": kotor, "Laba bersih": bersih };
+  const reset = () => { setVals({}); setOver({}); };
   return (
-    <Dialog open={!!batch} onOpenChange={o => { if (!o) onClose(); }}>
+    <Dialog open={!!batch} onOpenChange={o => { if (!o) { reset(); onClose(); } }}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader><DialogTitle>Internal Calculation · {batch}</DialogTitle><DialogDescription>Dihitung setelah barang tiba di Indonesia. Hanya terlihat oleh admin.</DialogDescription></DialogHeader>
         {!arrived && <div className="rounded-lg bg-warning-soft p-3 text-sm">Barang batch ini belum berstatus Arrive Indonesia. Internal calculation sebaiknya diisi setelah barang tiba di INA.</div>}
         <div className="grid gap-3 sm:grid-cols-2">
-          {internalFields.map(f => <label key={f} className="grid gap-1.5"><span className="text-xs font-semibold">{f} (Rp)</span><Input type="number" value={vals[f] ?? ""} onChange={e => setVals(v => ({ ...v, [f]: e.target.value }))} placeholder="0" /></label>)}
-          <div className="rounded-lg bg-primary-soft/60 p-3 sm:col-span-2"><p className="text-xs text-muted-foreground">Selisih (Total Harga Jual − Total TF Seller) · otomatis</p><p className="mt-1 text-lg font-extrabold">{rp(selisih)}</p></div>
+          {inputFields.map(f => <label key={f} className="grid gap-1.5"><span className="text-xs font-semibold">{f} (Rp)</span><Input type="number" value={vals[f] ?? (f === "Fee Nyelem" ? String(rec?.nyelem ?? "") : f === "Fee Rekap" ? String(rec?.rekap ?? "") : "")} onChange={e => setVals(x => ({ ...x, [f]: e.target.value }))} placeholder="0" /></label>)}
         </div>
-        <DialogFooter><Button variant="outline" onClick={onClose}>Batal</Button><Button onClick={() => { onSave(num(vals["Laba bersih"] ?? "")); setVals({}); }}><Save /> Simpan & tandai terhitung</Button></DialogFooter>
+        <div className="grid gap-3 rounded-lg bg-primary-soft/60 p-3 sm:grid-cols-2">
+          {Object.keys(autoNotes).map(f => { const edited = over[f] !== undefined && over[f] !== ""; return (
+            <label key={f} className="grid gap-1.5">
+              <span className="flex items-center justify-between text-xs font-semibold">{f} (Rp) {edited ? <button type="button" className="text-[10px] font-semibold text-primary underline" onClick={() => setOver(o => { const n = { ...o }; delete n[f]; return n; })}>diedit · kembali otomatis</button> : <span className="text-[10px] text-muted-foreground">otomatis</span>}</span>
+              <Input type="number" className="bg-background font-bold" value={edited ? over[f] : String(autoVals[f])} onChange={e => setOver(o => ({ ...o, [f]: e.target.value }))} />
+              <span className="text-[11px] text-muted-foreground">{autoNotes[f]}</span>
+            </label>); })}
+        </div>
+        <DialogFooter><Button variant="outline" onClick={() => { reset(); onClose(); }}>Batal</Button><Button onClick={() => { onSave(bersih); reset(); }}><Save /> Simpan & tandai terhitung</Button></DialogFooter>
       </DialogContent>
     </Dialog>
   );
