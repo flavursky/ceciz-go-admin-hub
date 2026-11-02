@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlbumOrdersRouteImport } from './routes/album-orders'
 import { Route as BatchesRouteImport } from './routes/batches'
+import { Route as BuyerApprovalsRouteImport } from './routes/buyer-approvals'
 import { Route as CashflowRouteImport } from './routes/cashflow'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as ReportsRouteImport } from './routes/reports'
@@ -33,6 +34,11 @@ const AlbumOrdersRoute = AlbumOrdersRouteImport.update({
 const BatchesRoute = BatchesRouteImport.update({
   id: '/batches',
   path: '/batches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuyerApprovalsRoute = BuyerApprovalsRouteImport.update({
+  id: '/buyer-approvals',
+  path: '/buyer-approvals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CashflowRoute = CashflowRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/album-orders': typeof AlbumOrdersRoute
   '/batches': typeof BatchesRoute
+  '/buyer-approvals': typeof BuyerApprovalsRoute
   '/cashflow': typeof CashflowRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/album-orders': typeof AlbumOrdersRoute
   '/batches': typeof BatchesRoute
+  '/buyer-approvals': typeof BuyerApprovalsRoute
   '/cashflow': typeof CashflowRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/album-orders': typeof AlbumOrdersRoute
   '/batches': typeof BatchesRoute
+  '/buyer-approvals': typeof BuyerApprovalsRoute
   '/cashflow': typeof CashflowRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/album-orders'
     | '/batches'
+    | '/buyer-approvals'
     | '/cashflow'
     | '/payments'
     | '/reports'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/album-orders'
     | '/batches'
+    | '/buyer-approvals'
     | '/cashflow'
     | '/payments'
     | '/reports'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/album-orders'
     | '/batches'
+    | '/buyer-approvals'
     | '/cashflow'
     | '/payments'
     | '/reports'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlbumOrdersRoute: typeof AlbumOrdersRoute
   BatchesRoute: typeof BatchesRoute
+  BuyerApprovalsRoute: typeof BuyerApprovalsRoute
   CashflowRoute: typeof CashflowRoute
   PaymentsRoute: typeof PaymentsRoute
   ReportsRoute: typeof ReportsRoute
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/batches'
       fullPath: '/batches'
       preLoaderRoute: typeof BatchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buyer-approvals': {
+      id: '/buyer-approvals'
+      path: '/buyer-approvals'
+      fullPath: '/buyer-approvals'
+      preLoaderRoute: typeof BuyerApprovalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cashflow': {
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlbumOrdersRoute: AlbumOrdersRoute,
   BatchesRoute: BatchesRoute,
+  BuyerApprovalsRoute: BuyerApprovalsRoute,
   CashflowRoute: CashflowRoute,
   PaymentsRoute: PaymentsRoute,
   ReportsRoute: ReportsRoute,

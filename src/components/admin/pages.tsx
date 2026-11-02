@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+export { BuyerApprovalsPage } from "./buyer-approvals";
 import { Textarea } from "@/components/ui/textarea";
 import { jpNetRupiah } from "./period-rules";
 import { CheckoutLinkSettings } from "./checkout-links";
