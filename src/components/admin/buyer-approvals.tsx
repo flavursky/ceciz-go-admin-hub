@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { EmptyState, FilterBar, MetricCard, MobileCards, PageHeader, PaginationBar, Panel, PanelHead, SelectBox, StatusBadge, TableShell } from "./admin-ui";
+import { EmptyState, FilterBar, MetricCard, MobileCards, PageHeader, PaginationBar, Panel, PanelHead, StatusBadge, TableShell } from "./admin-ui";
 
 type Group = "GO 1" | "GO 2";
 type Request = { id: string; name: string; email: string; dnLine: string; idLine: string; group: Group; time: string };
@@ -68,7 +68,7 @@ export function BuyerApprovalsPage() {
       <MetricCard label="Total buyer terdaftar" value={String(history.length + pending.length)} detail="Termasuk yang menunggu" icon={UserRound} />
     </div>
 
-    {flash && <Panel className="mt-5 border-success/40 bg-success-soft/30"><div className="flex items-start justify-between gap-3 px-5 py-4"><p className="text-sm font-semibold text-success">{flash}</p><Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" aria-label="Tutup pesan" onClick={() => setFlash(null)}><X /></Button></div></Panel>}
+    {flash && <Panel className={`mt-5 ${flash.tone === "success" ? "border-success/40 bg-success-soft/30" : "border-danger/40 bg-danger-soft/30"}`}><div className="flex items-start justify-between gap-3 px-5 py-4"><p className={`text-sm font-semibold ${flash.tone === "success" ? "text-success" : "text-danger"}`}>{flash.text}</p><Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" aria-label="Tutup pesan" onClick={() => setFlash(null)}><X /></Button></div></Panel>}
 
     <FilterBar placeholder="Search nama, email, atau ID LINE...">
       <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground"><span className="sr-only">Group</span>
@@ -81,9 +81,9 @@ export function BuyerApprovalsPage() {
     <Panel>
       <PanelHead title="Menunggu Persetujuan" subtitle={`${shownPending.length} pengajuan akun buyer baru`} action={<Button size="sm" variant="outline" onClick={() => setPending(initialPending)}><ShieldCheck /> Reset data contoh</Button>} />
       {shownPending.length === 0 ? <EmptyState /> : <>
-        <div className="hidden md:block"><TableShell columns={["Buyer", "Email Google", "DN LINE", "ID LINE", "Group", "Diajukan", "Status", "Action"]} rows={shownPending.map(r => [
+        <div className="hidden md:block"><TableShell columns={["Buyer", "Email Google", "DN LINE", "ID LINE", "Group", "Status", "Action"]} rows={shownPending.map(r => [
           <div className="flex items-center gap-2"><div className="grid h-8 w-8 place-items-center rounded-full bg-secondary text-xs font-bold text-secondary-foreground">{initials(r.name)}</div><strong>{r.name}</strong></div>,
-          r.email, r.dnLine, r.idLine, r.group, <span className="text-xs text-muted-foreground">{r.time}</span>, pendingBadge, act(r),
+          r.email, r.dnLine, r.idLine, r.group, pendingBadge, act(r),
         ])} /></div>
         <div className="p-4 md:hidden"><MobileCards items={shownPending.map(r => ({ title: r.name, subtitle: r.email, action: pendingBadge, rows: [{ label: "DN LINE", value: r.dnLine }, { label: "ID LINE", value: r.idLine }, { label: "Group", value: r.group }, { label: "Diajukan", value: r.time }], className: "flex flex-col" }))} />
           <div className="mt-3 grid gap-2">{shownPending.map(r => <div key={r.id} className="flex gap-2">{act(r)}</div>)}</div>
