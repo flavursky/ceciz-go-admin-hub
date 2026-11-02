@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router"; import { BuyerApprovalsPage } from "@/components/admin/pages";
+export const Route = createFileRoute("/buyer-approvals")({ head:()=>({meta:meta("Approval Akun Buyer","ACC atau tolak pengajuan akun buyer baru CECIZ GO sebelum bisa mengakses dashboard.")}), component:BuyerApprovalsPage });
+function meta(t:string,d:string){return [{title:`${t} — CECIZ GO Admin`},{name:"description",content:d},{property:"og:title",content:`${t} — CECIZ GO Admin`},{property:"og:description",content:d},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}
