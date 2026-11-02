@@ -53,11 +53,11 @@ export function BuyerApprovalsPage() {
     const request = rejecting;
     setPending(list => list.filter(r => r.id !== request.id));
     setHistory(list => [{ request, status: "Rejected", decidedAt: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) + ", " + new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }), reason: reason || "Tidak memenuhi syarat verifikasi." }, ...list]);
-    setFlash(`Pengajuan ${request.name} ditolak${reason ? `: ${reason}` : "."}`);
+    setFlash({ text: `Pengajuan ${request.name} ditolak${reason ? `: ${reason}` : "."}`, tone: "danger" });
     setRejecting(null);
   };
 
-  const act = (r: Request) => <div className="flex gap-1"><Button size="sm" variant="outline" onClick={() => setDetail(r)}><Eye /> Detail</Button><Button size="sm" variant="outline" className="text-success" onClick={() => approve(r)}><Check /> ACC</Button><Button size="sm" variant="outline" className="text-danger" onClick={() => openReject(r)}><X /> Tolak</Button></div>;
+  const act = (r: Request) => <div className="flex gap-1"><Button size="sm" variant="outline" className="px-2.5" onClick={() => setDetail(r)}><Eye /> Detail</Button><Button size="sm" variant="outline" className="px-2.5 text-success" onClick={() => approve(r)}><Check /> ACC</Button><Button size="sm" variant="outline" className="px-2.5 text-danger" onClick={() => openReject(r)}><X /> Tolak</Button></div>;
 
   return <>
     <PageHeader title="Approval Akun Buyer" description="Verifikasi pengajuan akun buyer baru (DN LINE, ID LINE, Group) sebelum mereka bisa mengakses dashboard buyer." />
