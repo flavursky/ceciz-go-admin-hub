@@ -71,7 +71,6 @@ export function BuyerApprovalsPage() {
     {flash && <Panel className="mt-5 border-success/40 bg-success-soft/30"><div className="flex items-start justify-between gap-3 px-5 py-4"><p className="text-sm font-semibold text-success">{flash}</p><Button size="icon" variant="ghost" className="h-7 w-7 shrink-0" aria-label="Tutup pesan" onClick={() => setFlash(null)}><X /></Button></div></Panel>}
 
     <FilterBar placeholder="Search nama, email, atau ID LINE...">
-      <SelectBox label="Group" options={["GO 1", "GO 2"]} />
       <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground"><span className="sr-only">Group</span>
         <select className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring" value={group} onChange={e => setGroup(e.target.value)} aria-label="Filter group">
           <option value="">Semua group</option><option>GO 1</option><option>GO 2</option>
