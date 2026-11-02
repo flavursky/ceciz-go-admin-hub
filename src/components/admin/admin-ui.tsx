@@ -22,6 +22,7 @@ const navSections: { label: string; items: NavItem[] }[] = [
     { label: "Batch & Harga", to: "/batches", icon: Calculator },
     { label: "Verifikasi Pembayaran", to: "/payments", icon: ClipboardCheck },
     { label: "Tracking", to: "/tracking", icon: Truck },
+    { label: "Approval Akun Buyer", to: "/buyer-approvals", icon: UserRound },
     { label: "Tagihan Tax", to: "/tax", icon: ReceiptText },
     { label: "PO Album / CO Web", to: "/album-orders", icon: PackageCheck },
     { label: "Cashflow", to: "/cashflow", icon: WalletCards, ownerOnly: true },
