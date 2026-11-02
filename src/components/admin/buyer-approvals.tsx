@@ -32,7 +32,7 @@ export function BuyerApprovalsPage() {
   const [detail, setDetail] = useState<Request | null>(null);
   const [rejecting, setRejecting] = useState<Request | null>(null);
   const [reason, setReason] = useState("");
-  const [flash, setFlash] = useState<string | null>(null);
+  const [flash, setFlash] = useState<{ text: string; tone: "success" | "danger" } | null>(null);
 
   const shownPending = pending.filter(r => !group || r.group === group);
   const shownHistory = history.filter(d => (!historyStatus || d.status === historyStatus) && (!group || d.request.group === group));
@@ -40,7 +40,7 @@ export function BuyerApprovalsPage() {
   const approve = (request: Request, fromDetail = false) => {
     setPending(list => list.filter(r => r.id !== request.id));
     setHistory(list => [{ request, status: "Approved", decidedAt: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) + ", " + new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) }, ...list]);
-    setFlash(`Akun ${request.name} di-ACC. Buyer sudah bisa mengakses dashboard buyer.`);
+    setFlash({ text: `Akun ${request.name} di-ACC. Buyer sudah bisa mengakses dashboard buyer.`, tone: "success" });
     if (fromDetail) setDetail(null);
   };
   const openReject = (request: Request, fromDetail = false) => {
