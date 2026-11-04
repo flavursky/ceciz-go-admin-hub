@@ -72,7 +72,7 @@ export function BuyerApprovalsPage() {
 
     <FilterBar placeholder="Search nama, email, atau ID LINE...">
       <label className="grid gap-1.5 text-xs font-semibold text-muted-foreground"><span className="sr-only">Group</span>
-        <select className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring" value={group} onChange={e => { console.log("GROUP CHANGE", e.target.value); setGroup(e.target.value); }} aria-label="Filter group">
+        <select className="h-9 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring" value={group} onChange={e => setGroup(e.target.value)} aria-label="Filter group">
           <option value="">Semua group</option><option>GO 1</option><option>GO 2</option>
         </select>
       </label>
